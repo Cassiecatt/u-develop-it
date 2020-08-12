@@ -15,6 +15,19 @@ const db = new sqlite3.Database('./db/election.db', err => {
     console.log('Connected to the election database')
 })
 
+//.all runs the SQL query & executes the callback w/ all the resulting rows matching the query
+// db.all(`SELECT * FROM candidates;`, (err, rows) => {
+//     console.log(rows);
+// });
+
+//GET a single candidate
+db.get(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+    if(err) {
+        console.log(err);
+    }
+    console.log(row);
+});
+
 // //Default response for any other request(Not Found) Catch all
 app.use((req, res) => {
     res.status(404).end();
