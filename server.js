@@ -153,6 +153,31 @@ app.post("/api/candidate", ({ body }, res) => {
   });
 });
 
+//Put route - updating a candidate
+app.put('/api/candidate/:id', (req, res) => {
+  const errors = inputCheck(req.body, 'party_id');
+  if(errors) {
+    res.status(400).json({ erros: errors });
+    return;
+  }
+
+  const sql = `UPDATE candidates SET party_id = ? 
+              WHERE id = ?`;
+  const params = [req.body.party_id, req.params.id];
+
+  db.run(sql, params, function(err, results) {
+    if(err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: req.body,
+      changes: this.changes
+    });
+  });
+});
+
 // //Default response for any other request(Not Found) Catch all
 app.use((req, res) => {
   res.status(404).end();
